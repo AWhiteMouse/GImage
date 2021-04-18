@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>GImage - 按需生成图片</title>
     <style>
         * {
             margin: 0;
@@ -24,36 +24,41 @@
         <input id="height" type="number" min="10" max="500" value="300" placeholder="请输入数字" />
         <label for="suffix">格式</label>
         <select id="suffix"></select>
+        <input id="watermark" type="checkbox" />
+        <label for="watermark" >水印</label>
     </div>
 
     <div>
-        <span>
+        <!-- <span> -->
             <span id="preview" onclick="preview()">预览</span>
-        </span>
+        <!-- </span> -->
 
-        <span>
-            <i class="icon-tupian"></i>
-            <a id="download" href="">下载</a>
-        </span>
     </div>
 
     <canvas id="myCanvas" width="300" height="300">
         如果你的页面展示了这句话，说明你的浏览器不支持canvas
     </canvas>
 
+    <div>
+        <i class="icon-tupian"></i>
+        <a id="download" href="">下载</a>
+    </div>
+
     <script>
         // Q: 如何实现图片下载
         // A: 使用a标签加download属性实现下载
 
+        // Q: 如何循环平铺输出水印（满屏水印）
+        // A: 根据长宽的平方根计算打印水印的行数与个数
+
         var widthDom = document.getElementById('width')
         var heightDom = document.getElementById('height')
         var suffixDom = document.getElementById('suffix')
+        var watermarkDom = document.getElementById('watermark')
         var downloadDom = document.getElementById('download')
 
         var canvas = document.getElementById('myCanvas')
         var ctx = canvas.getContext('2d');
-
-        // console.log(ctx);
 
         var currentWidth = width = 300;
         var currentHeight = height = 300;
@@ -74,14 +79,6 @@
             optionIndex = suffixDom.selectedIndex;
         }
 
-        function initOptions() {
-            var html = '';
-            options.forEach(option => {
-                html += `<option label="${option}"></option>`;
-            });
-            suffixDom.innerHTML = html;
-        }
-
         function reset(field, value) {
             window[field] = Number(value);
         }
@@ -90,21 +87,48 @@
             ctx.clearRect(0, 0, width, height)
         }
 
+        // 绘制图片
         function draw() {
             canvas.width = width = currentWidth;
             canvas.height = height = currentHeight;
+
+            // 绘制矩形
             ctx.fillStyle = '#eee'
             ctx.fillRect(0, 0, width, height)
 
+            // 添加水印
+            if (watermarkDom.checked) {
+                ctx.strokeStyle = '#d2cfcf'
+                ctx.font = "30px sans-serif"
+                ctx.rotate((-45 * Math.PI) / 180);
+
+                var strokeNum = Math.ceil(Math.sqrt(height * height + width * width) / 30) + 1
+                for (let i = 0; i < strokeNum; i++) {
+                    for (let j = -(strokeNum / 2); j < (strokeNum / 2); j++) {
+                        ctx.strokeText("GImage", -120 * j, i * 50);
+                    }
+                }
+            }
+
+            // 生成图片
             var suffix = options[optionIndex];
             downloadDom.href = canvas.toDataURL(`image/${suffix}`);
             downloadDom.download = `${pictureName}.${suffix}`
-            // console.log(ctx.getImageData(0, 0, width, height))
         }
 
+        // 图片预览
         function preview() {
             clear()
             draw();
+        }
+
+        // 初始化图片后缀列表
+        function initOptions() {
+            var html = '';
+            options.forEach(option => {
+                html += `<option label="${option}"></option>`;
+            });
+            suffixDom.innerHTML = html;
         }
 
         initOptions()
