@@ -53,7 +53,7 @@
         var canvas = document.getElementById('myCanvas')
         var ctx = canvas.getContext('2d');
 
-        console.log(ctx);
+        // console.log(ctx);
 
         var currentWidth = width = 300;
         var currentHeight = height = 300;
@@ -95,10 +95,11 @@
             canvas.height = height = currentHeight;
             ctx.fillStyle = '#eee'
             ctx.fillRect(0, 0, width, height)
+
             var suffix = options[optionIndex];
             downloadDom.href = canvas.toDataURL(`image/${suffix}`);
             downloadDom.download = `${pictureName}.${suffix}`
-            console.log(ctx.getImageData(0, 0, width, height))
+            // console.log(ctx.getImageData(0, 0, width, height))
         }
 
         function preview() {
