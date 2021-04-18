@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <label for="width">宽</label>
+        <input id="width" type="number" min="10" max="500" value="300" placeholder="请输入数字" />
+        <label for="height">高</label>
+        <input id="height" type="number" min="10" max="500" value="300" placeholder="请输入数字" />
+        <label for="suffix">格式</label>
+        <select id="suffix"></select>
+    </div>
+
+    <div>
+        <span>
+            <span id="preview" onclick="preview()">预览</span>
+        </span>
+
+        <span>
+            <i class="icon-tupian"></i>
+            <a id="download" href="">下载</a>
+        </span>
+    </div>
+
+    <canvas id="myCanvas" width="300" height="300">
+        如果你的页面展示了这句话，说明你的浏览器不支持canvas
+    </canvas>
+
+    <script>
+        // Q: 如何实现图片下载
+        // A: 使用a标签加download属性实现下载
+
+        var widthDom = document.getElementById('width')
+        var heightDom = document.getElementById('height')
+        var suffixDom = document.getElementById('suffix')
+        var downloadDom = document.getElementById('download')
+
+        var canvas = document.getElementById('myCanvas')
+        var ctx = canvas.getContext('2d');
+
+        console.log(ctx);
+
+        var currentWidth = width = 300;
+        var currentHeight = height = 300;
+
+        var pictureName = '测试'
+        var options = ['png', 'jpg', 'jpeg']
+        var optionIndex = 0;
+
+        widthDom.oninput = function(e) {
+            reset('currentWidth', e.target.value)
+        }
+
+        heightDom.oninput = function(e) {
+            reset('currentHeight', e.target.value)
+        }
+
+        suffixDom.onchange = function(e) {
+            optionIndex = suffixDom.selectedIndex;
+        }
+
+        function initOptions() {
+            var html = '';
+            options.forEach(option => {
+                html += `<option label="${option}"></option>`;
+            });
+            suffixDom.innerHTML = html;
+        }
+
+        function reset(field, value) {
+            window[field] = Number(value);
+        }
+
+        function clear() {
+            ctx.clearRect(0, 0, width, height)
+        }
+
+        function draw() {
+            canvas.width = width = currentWidth;
+            canvas.height = height = currentHeight;
+            ctx.fillStyle = '#eee'
+            ctx.fillRect(0, 0, width, height)
+            var suffix = options[optionIndex];
+            downloadDom.href = canvas.toDataURL(`image/${suffix}`);
+            downloadDom.download = `${pictureName}.${suffix}`
+            console.log(ctx.getImageData(0, 0, width, height))
+        }
+
+        function preview() {
+            clear()
+            draw();
+        }
+
+        initOptions()
+        draw()
+    </script>
+</body>
+</html>
