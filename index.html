@@ -14,10 +14,22 @@
         body {
             text-align: center;
         }
+
+        .line {
+            margin-bottom: 8px;
+        }
+
+        .button {
+            cursor: pointer;
+        }
+
+        #file {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <div>
+    <div class="line">
         <label for="width">宽</label>
         <input id="width" type="number" min="10" max="500" value="300" placeholder="请输入数字" />
         <label for="height">高</label>
@@ -30,22 +42,24 @@
         <label for="watermark" >水印</label>
     </div>
 
-    <div>
-        <label for="file">上传图片</label>
+    <div class="line">
+        <label for="file" class="button">上传图片</label>
         <input id="file" type="file" accept=".png,.jpg,.jpeg" />
-        <span onclick="deleteImage()">删除图片</span>
+        <span class="button" onclick="deleteImage()">清除图片</span>
     </div>
 
-    <div>
+    <div class="line">
         <!-- <span> -->
-            <span id="preview" onclick="preview()">预览</span>
+            <span id="preview" class="button" onclick="preview()">预览</span>
         <!-- </span> -->
 
     </div>
 
-    <canvas id="myCanvas" width="300" height="300">
-        如果你的页面展示了这句话，说明你的浏览器不支持canvas
-    </canvas>
+    <div class="line">
+        <canvas id="myCanvas" width="300" height="300">
+            如果你的页面展示了这句话，说明你的浏览器不支持canvas
+        </canvas>
+    </div>
 
     <div>
         <i class="icon-tupian"></i>
