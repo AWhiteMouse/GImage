@@ -31,6 +31,12 @@
     </div>
 
     <div>
+        <label for="file">上传图片</label>
+        <input id="file" type="file" accept=".png,.jpg,.jpeg" />
+        <span onclick="deleteImage()">删除图片</span>
+    </div>
+
+    <div>
         <!-- <span> -->
             <span id="preview" onclick="preview()">预览</span>
         <!-- </span> -->
@@ -53,8 +59,16 @@
         // Q: 如何循环平铺输出水印（满屏水印）
         // A: 根据长宽的平方根计算打印水印的行数与个数
 
+        // Q: 如何将上传的图片绘制到canvas上（Failed to execute 'drawImage' on 'CanvasRenderingContext2D）
+        // A: 绘制时只能绘制image元素(new Image), 而不能绘制 image 的 base64 字符串
+
+        // Q: 绘制图片时，如何处理image onload事件异步的问题（我需要在图片绘制完毕之后才能将canvas导出成下载链接放到a标签上）
+        // A: 剥离异步操作，在 image onload 完毕后再调用 draw 方法，而不是在 draw 方法里面去加载图片（懒得用Promise）
+
         // Q: 如何修改图片质量（压缩或增大）
         // A: toDataURL 的第二个参数
+
+
 
         // 非必要，元素ID会自动在全局（window）下生成同名变量，无需再获取DOM
         // 此处获取DOM为了便于理解
@@ -63,6 +77,7 @@
         var suffixDom = document.getElementById('suffix')
         var colorDom = document.getElementById('color')
         var watermarkDom = document.getElementById('watermark')
+        var fileDom = document.getElementById('file')
         var downloadDom = document.getElementById('download')
 
         var canvas = document.getElementById('myCanvas')
@@ -78,6 +93,9 @@
         var options = ['png', 'jpg', 'jpeg']
         var optionIndex = 0;
 
+        // 保存用于绘制的图片
+        var image = null;
+
         widthDom.oninput = function(e) {
             reset('currentWidth', e.target.value)
         }
@@ -86,12 +104,35 @@
             reset('currentHeight', e.target.value)
         }
 
-        suffixDom.onchange = function(e) {
+        suffixDom.onchange = function() {
             optionIndex = suffixDom.selectedIndex;
         }
 
-        colorDom.onchange = function(e) {
+        colorDom.onchange = function() {
             brushColor = colorDom.value;
+        }
+
+        fileDom.onchange = function() {
+            console.log(fileDom.files)
+            const file = fileDom.files[0];
+            if (!file) {
+                return;
+            }
+
+            if(!/image\/\w+/.test(file.type)){
+                alert("请确保文件为图像类型");
+                return;
+            }
+
+            var fileReader = new FileReader();
+            fileReader.readAsDataURL(file)
+            fileReader.onload = function(e) {
+                image = new Image();
+                image.onload = function() {
+                    draw()
+                }
+                image.src = fileReader.result;
+            }
         }
 
         function reset(field, value) {
@@ -107,9 +148,15 @@
             canvas.width = width = currentWidth;
             canvas.height = height = currentHeight;
 
-            // 绘制矩形
-            ctx.fillStyle = brushColor
-            ctx.fillRect(0, 0, width, height)
+            if (image) {
+                // 绘制图片
+                ctx.drawImage(image, 0, 0, width, height)
+            }
+            else {
+                // 绘制矩形
+                ctx.fillStyle = brushColor
+                ctx.fillRect(0, 0, width, height)
+            }
 
             // 添加水印
             if (watermarkDom.checked) {
@@ -135,6 +182,13 @@
         function preview() {
             clear()
             draw();
+        }
+
+        function deleteImage() {
+            if (image) {
+                image = null;
+                draw()
+            }
         }
 
         // 初始化图片后缀列表
