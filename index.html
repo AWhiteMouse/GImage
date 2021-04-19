@@ -24,6 +24,8 @@
         <input id="height" type="number" min="10" max="500" value="300" placeholder="请输入数字" />
         <label for="suffix">格式</label>
         <select id="suffix"></select>
+        <label for="color">颜色</label>
+        <input id="color" type="color" />
         <input id="watermark" type="checkbox" />
         <label for="watermark" >水印</label>
     </div>
@@ -51,9 +53,15 @@
         // Q: 如何循环平铺输出水印（满屏水印）
         // A: 根据长宽的平方根计算打印水印的行数与个数
 
+        // Q: 如何修改图片质量（压缩或增大）
+        // A: toDataURL 的第二个参数
+
+        // 非必要，元素ID会自动在全局（window）下生成同名变量，无需再获取DOM
+        // 此处获取DOM为了便于理解
         var widthDom = document.getElementById('width')
         var heightDom = document.getElementById('height')
         var suffixDom = document.getElementById('suffix')
+        var colorDom = document.getElementById('color')
         var watermarkDom = document.getElementById('watermark')
         var downloadDom = document.getElementById('download')
 
@@ -63,7 +71,10 @@
         var currentWidth = width = 300;
         var currentHeight = height = 300;
 
-        var pictureName = '测试'
+        // NOTE: <input type="color" /> 其 value 值必须为 #rrggbb 格式
+        var brushColor = '#eeeeee';
+
+        var pictureName = 'GImage'
         var options = ['png', 'jpg', 'jpeg']
         var optionIndex = 0;
 
@@ -77,6 +88,10 @@
 
         suffixDom.onchange = function(e) {
             optionIndex = suffixDom.selectedIndex;
+        }
+
+        colorDom.onchange = function(e) {
+            brushColor = colorDom.value;
         }
 
         function reset(field, value) {
@@ -93,7 +108,7 @@
             canvas.height = height = currentHeight;
 
             // 绘制矩形
-            ctx.fillStyle = '#eee'
+            ctx.fillStyle = brushColor
             ctx.fillRect(0, 0, width, height)
 
             // 添加水印
@@ -131,8 +146,19 @@
             suffixDom.innerHTML = html;
         }
 
-        initOptions()
-        draw()
+        // 初始化画笔颜色
+        function initBrushColor() {
+            colorDom.setAttribute('value', brushColor)
+        }
+
+        // 全局初始化
+        function init() {
+            initOptions();
+            initBrushColor();
+            draw();
+        }
+
+        init()
     </script>
 </body>
 </html>
