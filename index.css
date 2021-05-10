@@ -24,3 +24,14 @@ body {
 #file {
     display: none;
 }
+
+.link,
+.link img {
+    width: 28px;
+    height: 28px;
+}
+
+.link {
+    display: inline-block;
+    margin-top: 15px;
+}
