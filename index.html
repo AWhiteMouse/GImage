@@ -19,17 +19,17 @@
     </script>
 </head>
 <body>
-    <div class="line">
+    <div class="line flex-center">
         <label for="width">宽</label>
-        <input id="width" type="number" min="10" max="500" value="300" placeholder="请输入数字" />
+        <input id="width" type="number" class="number" min="10" max="500" value="300" placeholder="请输入数字" />
         <label for="height">高</label>
-        <input id="height" type="number" min="10" max="500" value="300" placeholder="请输入数字" />
+        <input id="height" type="number" class="number" min="10" max="500" value="300" placeholder="请输入数字" />
         <label for="suffix">生成图片格式</label>
         <select id="suffix"></select>
         <label for="color">背景色</label>
         <input id="color" type="color" />
-        <input id="watermark" type="checkbox" checked />
         <label for="watermark" >水印</label>
+        <input id="watermark" type="checkbox" checked />
     </div>
 
     <div class="line">
@@ -146,7 +146,6 @@
                 return;
             }
 
-            _hmt.push(['_trackEvent', 'image-upload'])
             var fileReader = new FileReader();
             fileReader.readAsDataURL(file)
             fileReader.onload = function(e) {

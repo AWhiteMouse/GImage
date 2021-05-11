@@ -8,6 +8,31 @@ body {
     text-align: center;
 }
 
+input + label,
+select + label {
+    margin-left: 15px;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.number {
+    border: 1px solid #dcdfe6;
+    padding-left: 8px;
+    height: 26px;
+    width: 70px;
+    line-height: 26px;
+    border-radius: 4px;
+    outline: none;
+}
+
+select option {
+    width: 70px;
+}
+
 .note {
     margin-bottom: 10px;
     font-size: 12px;
