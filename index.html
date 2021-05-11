@@ -24,7 +24,7 @@
         <input id="width" type="number" min="10" max="500" value="300" placeholder="请输入数字" />
         <label for="height">高</label>
         <input id="height" type="number" min="10" max="500" value="300" placeholder="请输入数字" />
-        <label for="suffix">格式</label>
+        <label for="suffix">生成图片格式</label>
         <select id="suffix"></select>
         <label for="color">背景色</label>
         <input id="color" type="color" />
@@ -33,9 +33,9 @@
     </div>
 
     <div class="line">
-        <label for="file" class="button">上传图片</label>
+        <label for="file" class="button">上传背景图</label>
         <input id="file" type="file" accept=".png,.jpg,.jpeg" />
-        <span class="button" onclick="deleteImage()">清除图片</span>
+        <span class="button" onclick="deleteImage()">清除背景图</span>
     </div>
 
     <div class="line">
@@ -53,13 +53,13 @@
 
     <div class="note">（先预览后下载）</div>
 
-    <div>
+    <div class="line">
         <!-- <i class="icon-tupian"></i> -->
         <a id="download" href="" class="button">下载</a>
         <span class="button" onclick="clipboard()">复制到剪切板</span>
     </div>
 
-    <div>
+    <div class="line">
         同时下载 <input id="count" type="number" value="3" /> 张图片
         <span class="button" onclick="batchDownload()">批量下载</span>
     </div>
@@ -146,6 +146,7 @@
                 return;
             }
 
+            _hmt.push(['_trackEvent', 'image-upload'])
             var fileReader = new FileReader();
             fileReader.readAsDataURL(file)
             fileReader.onload = function(e) {
