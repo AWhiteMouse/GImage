@@ -19,7 +19,7 @@ select + label {
     align-items: center;
 }
 
-.number {
+input[type="number"] {
     border: 1px solid #dcdfe6;
     padding-left: 8px;
     height: 26px;
@@ -29,8 +29,18 @@ select + label {
     outline: none;
 }
 
-select option {
-    width: 70px;
+input[type="color"] {
+    border-color: #dcdfe6;
+    width: 50px;
+    height: 26px;
+    background-color: #fff;
+    border-radius: 4px;
+}
+
+input[type="color"],
+input[type="checkbox"],
+select {
+    cursor: pointer;
 }
 
 .note {
