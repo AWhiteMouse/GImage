@@ -266,7 +266,7 @@
         function download(src) {
             var $a = document.createElement('a');
             $a.setAttribute("href", src);
-            $a.setAttribute("download", `${pictureName}.${suffix}`);
+            $a.setAttribute("download", `${pictureName}_${width}_${height}.${suffix}`);
 
             var evObj = document.createEvent('MouseEvents');
             evObj.initMouseEvent( 'click', true, true, window, 0, 0, 0, 0, 0, false, false, true, false, 0, null);
