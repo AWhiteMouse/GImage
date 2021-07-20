@@ -122,8 +122,16 @@
             reset('currentWidth', e.target.value)
         }
 
+        widthDom.onblur = function() {
+            draw();
+        }
+
         heightDom.oninput = function(e) {
             reset('currentHeight', e.target.value)
+        }
+
+        heightDom.onblur = function() {
+            draw();
         }
 
         suffixDom.onchange = function() {
@@ -132,6 +140,11 @@
 
         colorDom.onchange = function() {
             brushColor = colorDom.value;
+            draw();
+        }
+
+        watermarkDom.onchange = function() {
+            draw();
         }
 
         fileDom.onchange = function() {
@@ -217,7 +230,7 @@
             // 生成图片（单图下载）
             var suffix = getSuffix();
             downloadDom.href = canvas.toDataURL(`image/${suffix}`);
-            downloadDom.download = `${pictureName} - ${width}*${height}.${suffix}`
+            downloadDom.download = `${pictureName}_${width}_${height}.${suffix}`
         }
 
         // 图片预览
