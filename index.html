@@ -30,6 +30,8 @@
         <input id="color" type="color" />
         <label for="watermark" >水印</label>
         <input id="watermark" type="checkbox" checked />
+        <label for="originSize" >保持原图大小</label>
+        <input id="originSize" type="checkbox" checked />
     </div>
 
     <div class="line">
@@ -97,6 +99,7 @@
         var suffixDom = document.getElementById('suffix')
         var colorDom = document.getElementById('color')
         var watermarkDom = document.getElementById('watermark')
+        var originSizeDom = document.getElementById('originSize')
         var fileDom = document.getElementById('file')
         var downloadDom = document.getElementById('download')
         var countDom = document.getElementById('count')
@@ -117,6 +120,11 @@
 
         // 保存用于绘制的图片
         var image = null;
+        var imageWidth = 0;
+        var imageHeight = 0;
+
+        // 渲染图片时是否保持原始尺寸
+        var isOriginSize = true;
 
         widthDom.oninput = function(e) {
             reset('currentWidth', e.target.value)
@@ -147,6 +155,10 @@
             draw();
         }
 
+        originSizeDom.onchange = function() {
+            draw();
+        }
+
         fileDom.onchange = function() {
             const file = fileDom.files[0];
             if (!file) {
@@ -163,6 +175,8 @@
             fileReader.onload = function(e) {
                 image = new Image();
                 image.onload = function() {
+                    imageWidth = this.width;
+                    imageHeight = this.height;
                     draw()
                 }
                 image.src = fileReader.result;
@@ -204,8 +218,14 @@
             canvas.height = height = currentHeight;
 
             if (image) {
-                // 绘制图片
-                ctx.drawImage(image, 0, 0, width, height)
+                if (originSizeDom.checked) {
+                    // 按照原始尺寸绘制图片
+                    ctx.drawImage(image, (width-imageWidth)/2, (height - imageHeight)/2, imageWidth, imageHeight)
+                }
+                else {
+                    // 按照设置尺寸绘制图片
+                    ctx.drawImage(image, 0, 0, width, height)
+                }
             }
             else {
                 // 绘制矩形
@@ -243,6 +263,8 @@
         function deleteImage() {
             if (image) {
                 image = null;
+                imageWidth = 0;
+                imageHeight = 0;
                 draw()
             }
         }
